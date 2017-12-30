@@ -1,0 +1,51 @@
+{%extends 'base.html'%} {%block title%} - 出售各类爬虫，接爬虫单子 {%endblock title%}
+{%block content%}
+<div class="list-group-item list-group-item-warning">
+    注意事项：
+    <br>
+    <br> 1.联系方式也可以作为你的提卡凭证
+    <br>2.必须等待付款完成自动跳转，不可提前关闭页面，否则会导致订单失效，后果自负
+    <br>
+</div>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="{{url_for('faka.getkm')}}" data-toggle="tab">订单查询提卡</a></li>
+    <li><a href="{{url_for('faka.index')}}">在线购买下单</a></li>
+</ul>
+<div class="list-group-item">
+    <div id="myTabContent" class="tab-content">
+        <form action="{{url_for('faka.getkm')}}" method="POST">
+            <div class="form-group">
+                <input type="text" name="tqm" id="tqm" value="" class="form-control text-center" placeholder="输入联系方式提取到您的卡密" required/>
+            </div>
+            <input type="submit" id="sub_query" class="btn btn-primary btn-block" value="提取卡密">
+        </form>
+    </div>
+    <div class="form-group">
+      <div class="panel panel-default">
+            <div class="panel-body" id="ginfo">
+                {%if orders%}
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>商品名</th>
+                      <th>价格</th>
+                      <th>购买时间</th>
+                      <th>卡密</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {%for order in orders%}
+                    <tr>
+                      <td>{{order.good.good_name}} </td>
+                      <td>{{order.good.good_price}}</td>
+                      <td>{{order.starttime}}</td>
+                      <td>{{order.km.km_value}}</td>
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                </table>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+{%endblock content%}

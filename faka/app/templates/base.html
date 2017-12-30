@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>爬虫铺子{%block title%}{%endblock title%}</title>
+  <meta name="keywords" content="爬虫铺子,自助发卡,在线购买">
+  <meta name="description" content="爬虫铺子">
+  <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="shortcut icon" type="image/x-icon" href="{{url_for('static',filename='img/shortcut.png')}}" media="screen" />
+  <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
+
+  <script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+<style>
+img.logo{width:14px;height:14px;margin:0 5px 0 3px;}
+body{
+  background-image: url("{{url_for('static',filename='img/bj3.jpg')}}");
+  background-repeat: repeat;
+}
+</style>
+</head>
+<body>
+
+
+
+<div style="height: 20px;">
+
+</div>
+<div class="container" >
+<div class="col-xs-12 col-sm-10 col-md-8 col-lg-9 center-block" style="float: none;">
+<div class="panel panel-default" style="border: 2px solid #63B8FF;">
+    <div class="panel-body" style="text-align: center;" >
+<img alt="" height="82px" src="{{url_for('static',filename='img/logo.png')}}" class="img-responsive center-block" >
+
+</div>
+</div>
+
+<div class="panel panel-primary">
+
+<div class="panel-body" style="text-align: center;">
+  <div class="list-group">
+    <!--div class="list-group-item list-group-item-info">
+      <img src="logo.png">
+    </div-->
+
+    {%block content%}
+    {%endblock content%}
+
+    </div>
+    <hr/>
+    <div class="container-fluid">
+
+      <a href="http://wpa.qq.com/msgrd?v=3&uin={{qq}}&site=qq&menu=yes" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-user"></span> 联系客服</a>
+    </div>
+    <br>
+    <span>Copyright © 2017 爬虫铺子</span>
+
+
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</body>
+</html>

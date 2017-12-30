@@ -1,0 +1,39 @@
+{% extends 'base_account.html' %}
+{%from '_form_render.html' import render_field%}
+{%block title%}登录{%endblock%}
+
+{% block content %}
+{% import "bootstrap/wtf.html" as wtf %}
+    <div class="container">
+        <h2 class="form-signin-heading text-center">登录</h2>
+        <div class="card card-signin">
+            <img class="img-circle profile-img" src="{{url_for('static',filename='img/avatar.png')}}" alt="">
+            <form action="" method="post" class="form" role="form">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.email) }}
+            {{ render_field(form.password) }}
+            {{ render_field(form.recaptcha) }}
+            <img id='recaptcha' src="{{url_for('auth.generate_code')}}"/>
+            <div class="checkbox">
+              <label>
+                <input checked id="remember_me" name="remember_me" type="checkbox" value="y"> {{form.remember_me.label}}
+              </label>
+            </div>
+                <input class="btn btn-default" id="submit" name="submit" type="submit" value="登陆">
+            </form>
+        </div>
+
+        <p class="text-center">
+            <a href="{{url_for('auth.register')}}">注册</a>
+            |
+            <a href="{{url_for('auth.password_reset_request')}}">找回密码</a>
+        </p>
+<script type='text/javascript'>
+    $(function(){
+        $('img#recaptcha').on('click', function(){
+            $(this).attr('src', ($(this).attr('src'))+'?'+Math.random())
+        })
+    });
+</script>
+    </div> <!-- /container -->
+{% endblock %}

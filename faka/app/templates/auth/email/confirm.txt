@@ -1,0 +1,6 @@
+亲爱的 {{ user.username }},
+    欢迎注册 {{domain}}
+    请点击或者复制以下链接以验证邮箱
+    {{ url_for('auth.confirm', token=token, _external=True) }}
+
+    注意: 请勿回复系统邮箱！

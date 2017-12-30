@@ -1,0 +1,6 @@
+<p>亲爱的 {{ user.username }},</p>
+<p>    欢迎注册 {{domain}}</p>
+<p>    请点击或者复制以下链接以验证邮箱</p>
+<p>    {{ url_for('auth.confirm', token=token, _external=True) }}</p>
+<p></p>
+<p>    注意: 请勿回复系统邮箱！</p>

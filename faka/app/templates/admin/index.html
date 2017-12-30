@@ -1,0 +1,16 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{%if session.admin%}
+<div class="jumbotron">
+<div class="container">
+    <p>今天是：{{datetime.now().strftime('%Y-%m-%d')}}</p>
+    <p>今天订单：{{Order.query.filter(Order.starttime>=datetime.now().date()).count()}}个。其中成功支付订单：{{Order.query.filter(Order.starttime>=datetime.now().date(),Order.trade_status==True).count()}}个</p>
+    <p>今天收入：{{db.session.query(Order).join(Good,Good.good_id==Order.good_id).filter(Order.starttime>=datetime.now().date(),Order.trade_status==True).with_entities(db.func.sum(Good.good_price)).all()[0][0]}}￥</p>
+
+</div>
+</div>
+
+{%else%}
+你tm是谁？
+{%endif%}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% macro render_field(field,more) %}
+  <div class="form-group required">
+      <label class="control-label" for="email">{{field.label}}</label>
+      {%if field.errors%}
+      {%for error in field.errors%}
+          <div class="alert alert-info text-center" style="max-width: 600px;margin:0 auto;">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{error}}
+          </div>
+      {%endfor%}
+      {%endif%}
+      {{field(class='form-control')}}
+      {{more}}
+  </div>
+{% endmacro %}

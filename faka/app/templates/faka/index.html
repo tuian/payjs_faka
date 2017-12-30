@@ -1,0 +1,293 @@
+{%extends 'base.html'%}
+
+{%block title%}
+ - 出售各类爬虫，接爬虫单子
+{%endblock title%}
+
+
+{%block content%}
+  <div class="panel panel-info">
+        <div class="list-group-item reed" style="background: #66bdff;">
+          <h3 class="panel-title">
+            <font color="#fff"><i class="fa fa-volume-up"></i>&nbsp;&nbsp;<b>购买须知<用户必看></b></font>
+          </h3>
+        </div>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td align="center"><font color="#808080">本站域名：{{domain}}</font></td>
+              <td align="center"><font color="#808080">客服QQ:{{qq}}</font></td>
+            </tr>
+
+          </tbody>
+        </table>
+        <div class="list-group-item reed">
+
+          <font style="color:#009ACD;font-weight: bold;">提取卡密后请尽快激活使用或保存好，系统定期清除被提取的卡密</font>
+        </div>
+        <div class="list-group-item reed">
+          <font style="color:#556B2F;font-weight: bold;">付款后按提示点击确定跳转到提取页面，不可提前关闭窗口！否则无法提取到卡密！</font>
+        </div>
+        <div class="list-group-item reed">
+          <font style="color:#008B00;font-weight: bold;">提取码是订单编号 或者 您的联系方式！</font>
+        </div>
+
+
+
+
+
+</div>
+<ul class="nav nav-tabs">
+  <li class="active"><a href="{{url_for('faka.index')}}" data-toggle="tab">在线购买下单</a></li>
+  <li><a href="{{url_for('faka.getkm')}}" >订单查询提卡</a></li>
+</ul>
+<div class="list-group-item">
+  <div id="myTabContent" class="tab-content">
+  <div class="tab-pane fade in active" id="onlinebuy">
+    <div class="form-group">
+      <div class="input-group"><div class="input-group-addon">商品分类</div>
+      <select name="tp_id" id="tp_tid" class="form-control" onchange="getPoint(this);">
+          {%for cate in Category.query.order_by(Category.cateid.asc()).all()%}
+          <option value="{{cate.cateid}}">{{cate.cate_name}}</option>
+          {%endfor%}
+      </select>
+    </div></div>
+    <div class="form-group">
+      <div class="input-group"><div class="input-group-addon">选择商品</div>
+      <select name="gid" id="gid" class="form-control" onchange="getPrice(this)">
+      </select>
+    </div></div>
+    <div class="form-group">
+      <div class="panel panel-default">
+            <div class="panel-body" id="ginfo">
+            </div>
+        </div>
+    </div>
+  </div>
+    <div class="form-group">
+      <div class="input-group"><div class="input-group-addon">商品价格</div>
+      <input type="text" name="need" id="need" class="form-control" disabled/>
+    </div></div>
+
+    <div class="form-group" style=" ">
+      <div class="input-group"><div class="input-group-addon">商品库存</div>
+      <input type="text" name="kc" id="kc" class="form-control" disabled/>
+    </div></div>
+
+    <div class="form-group">
+      <div class="input-group"><div class="input-group-addon">联系方式</div>
+      <input type="text" name="lx" id="lx" value="" class="form-control" placeholder="输入您的QQ,您的QQ号码也可以作为您的提取密码" required/>
+    </div></div>
+
+    <div class="form-group">
+     <span class="btn btn-default btnSpan"  title="wxpay"><input type="radio" name="type" value="wxpay" class="pay" id="wxpay" value="wxpay" title="微信支付" checked><img alt="" src="http://11.qiao0.com/assets/wechat.ico" class="logo">微信支付</span>
+      </div>
+    </div>
+    <input type="submit" id="submit_buy" class="btn btn-primary btn-block" value="立即购买">
+  </div>
+
+<script type="text/javascript">
+  function IsPC() {
+    var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+    var flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+        }
+    }
+    return flag;
+  }
+
+  var ispc=IsPC();
+  function getPoint(e){
+        var d = $(e).val();//获取该分类的ID
+        var ii = layer.load(2, {shade:[0.1,'#fff']});
+        $.ajax({
+        type : "POST",
+        url : "{{url_for('faka.Selgo')}}",
+        data : {"cateid":d},
+        dataType : 'json',
+        success : function(data) {
+            layer.close(ii);
+
+          //$("#gid").empty();
+          //$("#gid").append(data.msg);
+          $("#gid").html(data.msg);
+          $('#ginfo').html("");
+          $('#ginfo').hide();
+        },
+        error:function(data){
+          layer.close(ii);
+          layer.msg('服务器错误');
+          }
+      });
+}
+//获取库存
+function getKc(){
+  var kc  = $("#gid option:selected").attr("kc");
+  $('#kc').val(kc);
+  $('#kc').attr("alt",kc);
+
+}
+//获取商品介绍
+function getInfo(){
+  $('#ginfo').show();
+  var alt  = $("#gid option:selected").attr("alt");
+  if(alt == "" || alt == null){
+    $('#ginfo').html("该商品无介绍");
+  }else{
+    $('#ginfo').html(alt);
+  }
+
+}
+//获取价格
+function getPrice(){
+     var price  = $("#gid option:selected").attr("title");
+     $('#need').val('￥'+price);
+     getKc();
+     getInfo();
+}
+
+//*******************提交按钮************************
+  $("#submit_buy").click(function(){
+    var a = $('#kc').attr("alt");
+    if(a <= 0){
+      layer.msg('该商品库存不足，无法购买！');
+      return;
+    }
+    var gName = $("#gid").val();//获取商品名称<展示>
+    var gId = $("#gid option:selected").attr("id");//获取商品ID *
+    var price = $("#need").val();//获取商品价格<展示>
+    var money =$("#gid option:selected").attr("title");;//获取商品价格  *
+    var num = $("#lx").val();//获取联系方式 *
+    var type = $("input:radio[name='type']:checked").val();//获取付款方式 *
+    var payfs = $("input:radio[name='type']:checked").attr("title");//付款方式<展示>
+    var out_trade_no = d();//订单编号 *
+
+    var b = checkLx(num);//判断联系方式是否正确
+
+    if(b == false){
+      layer.msg('请输入正确的联系方式');
+      return;
+    }
+    if(type == null || type =="" ){
+      layer.msg('请选择您的付款方式');
+      return;
+    }
+    if(gId == "" || price == "" || gId == null || price == null){
+      layer.msg('当前商品无法创建订单！');
+      return;
+    }
+    var ii = layer.load(2, {shade:[0.1,'#fff']});
+
+    //验证卡密信息
+    $.ajax({
+      type : "POST",
+      url : "{{url_for('faka.Checkgo')}}",
+      data : {"goodid":gId},
+      dataType : 'json',
+      success : function(data) {
+        if(data.code == -1){
+          layer.close(ii);
+          layer.msg('该商品卡密库存不足！无法购买！');
+          return;
+        }
+      },
+      error:function(data){
+         layer.close(ii);
+        layer.msg('服务器错误');
+        return;
+        }
+    });
+    layer.close(ii);
+
+    var u = "type="+type+"&name="+gName+"&money="+money+"&out_trade_no="+out_trade_no+"&gid="+gId;
+
+    var str = "请核对订单信息！<br>订单编号："+out_trade_no+
+    "<br>商品名称："+gName+
+    "<br>商品价格："+price+
+    "<br>联系方式："+num+
+    "<br>付款方式："+payfs;
+
+    layer.confirm(str, {
+        btn: ['立即付款','取消付款'] //按钮
+      }, function(){
+        //异步创建订单
+        var ii = layer.load(2, {shade:[0.1,'#fff']})
+        $.ajax({
+          type : "POST",
+          url : "{{url_for('faka.CreateOrder')}}",
+          data : {"out_trade_no":out_trade_no,"gid":gId,"rel":num},
+          dataType : 'json',
+          //timeout : 5000,
+          success : function(data) {
+             layer.close(ii);
+             if(data.code != 0){
+                layer.msg('服务器错误');
+                return false;
+              }
+              else{
+                var qr=data.qr;
+                str="微信扫码支付<br><img src='http://qr.liantu.com/api.php?&w=200&text="+qr+"'>";
+                if (ispc==false){
+                  var ifr = document.createElement('iframe');
+                  ifr.src ='http://www.baidu.com';
+                  ifr.style.display = 'none';
+                  document.body.appendChild(ifr);
+                }
+                layer.confirm(str, {
+                    btn: ['已付款','取消付款'] //按钮
+                  },function(index){
+                  //do something
+                  window.location.reload();
+                  layer.close(index);
+                });
+              }
+          },
+          error:function(data){
+             layer.close(ii);
+            layer.msg('服务器错误');
+            return false;
+            }
+        })
+        //*********************************************
+
+
+      }, function(){
+        layer.msg('请认真选择您要购买的商品，本站已开启黑名单记录，不良操作会导致您无法继续使用本站', {
+          time: 5000, //20s后自动关闭
+          btn: ['明白了']
+        });
+      });
+  })
+//生成单号
+function d(){
+   var d=new Date() ;
+   var e;
+   e=d.getFullYear()+""+d.getMonth()+""+d.getDate()+""+d.getHours()+""+d.getMinutes()+""+d.getMilliseconds();
+   return e;
+}
+
+//判断联系方式是否未数字
+function checkLx(num){
+  var t=num;//这个就是我们要判断的值了
+  if(!isNaN(t) && t !=""){
+   return true;
+  }else{
+    return false;
+  }
+}
+
+</script>
+<script type="text/javascript">
+$(function(){
+  //获取商品
+  getPoint($("#tp_tid"));
+})
+</script>
+
+{%endblock content%}
