@@ -2,8 +2,11 @@
 ----
 
 开发环境: Python2.7
+
 开发框架: flask
+
 前端框架: bootstrap
+
 数据库: MySQL
 
 ----
@@ -34,6 +37,7 @@
 
 ----
 **安装教程**
+
 0. 推荐环境：centos7+python2.7
 
 1. git clone https://github.com/za2016/payjs_faka.git
